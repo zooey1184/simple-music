@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>搜你喜爱音乐</title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	</head>
+	<body>
+		<input type="text" name="" id="" />
+		<button>search</button>
+		<div class="result"><ul></ul></div>
+		<audio id="audio" src="http://m2.music.126.net/AUIOB8NMftRDq26kc81iyg==/7779044766748810.mp3" autoplay="autoplay"></audio>
+		<script type="text/javascript">
+			$(function(){
+				var val = $('input').val();
+				$('button').click(function(){
+					//清空历史搜索
+					$('.result').find('ul').empty();
+					//Ajax获取音乐信息
+					$.ajax({
+						type:"get",
+						dataType:"jsonp",
+						url:"http://s.music.163.com/search/get/",
+						async:true,
+						data:{
+							type:1,
+							s:$('input').val(),
+							limit:10,
+							offset:0
+						},
+						success:function(results){
+							$.each(results.result.songs, function(i,v){
+								$('.result').find('ul').append("<li class='song'><h4>"+v.name+"--"+v.artists[0].name+"</h4><span>"+v.audio+"</span></li>")
+							})
+							console.log(results.result.songs[1].name+" URL: "+results.result.songs[1].audio);
+						}
+					});
+				})
+				//点击列表事件播放音乐
+				$('.result').on("click", ".song", function(){
+					var hef = $(this).find('span').text();
+					audio.src = hef;
+					console.log(hef)
+				})
+				
+			})
+		</script>
+	</body>
+</html>
